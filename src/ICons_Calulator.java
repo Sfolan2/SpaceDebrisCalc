@@ -1,0 +1,485 @@
+import javax.swing.*;
+import javax.swing.event.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+
+public class ICons_Calulator implements ActionListener, DocumentListener {
+	/*
+	 * This is a Calculator for ICons 189H CS2 Group 5: Space Junk
+	 * List of Factors (7 total) User will be asked to provide percentages based on their perceived importance
+	 * 1.) Time to remove (Slider Instantaneous, 1 week, 1 month 6 months, 1 year, 2 years+)
+	 * 2.) Quantity (Slider or bubbles 10:1, 1:1, 1:10, 1:100, 1:1000, 1:10000)
+	 * 3.) Cost (Text box)
+	 * 4.) Technological Readiness (Slider with values Already built, In development(< 2 years), In development (> 2years), < 5 years, > 5years)
+	 * 5.) Environmental Impact (Sliders None, Very Low, Low, High, Very High)
+	 * 6.) Scalability (Sliders Very Low, Low, High, Very High)
+	 * 7.) Type of objects it can remove (Check boxes Maybe?)
+	 */
+	
+	//Initializing some variables up here so that I can use them later
+	int recommendations[]= {25, 10, 10, 10, 10, 10, 25};
+	JTextField AllPercents[]=new JTextField[7];
+	JTextField total;
+	JComponent allInput[]=new JComponent[10];
+	JSlider row2slider;
+	JSlider row3slider;
+	JSlider row5slider;
+	JSlider row6slider;
+	JSlider row7slider;
+	JTextField row4cost;
+	JCheckBox smallBox;
+    JCheckBox mediumBox;
+    JCheckBox largeBox;
+    JCheckBox specialBox;
+    
+    //Declare methods
+    spaceJunkMethod SingleRoboticArm=new spaceJunkMethod(0, 1, 300, 2, 3, 4, 1, 0, 0, 1);
+    spaceJunkMethod EDDE=new spaceJunkMethod();
+    spaceJunkMethod ELSAd=new spaceJunkMethod();
+    spaceJunkMethod IBS=new spaceJunkMethod();
+    spaceJunkMethod EDT=new spaceJunkMethod();
+    spaceJunkMethod SpaceTug=new spaceJunkMethod();
+    spaceJunkMethod StickyFoam=new spaceJunkMethod();
+    spaceJunkMethod StarKiller=new spaceJunkMethod();
+    
+    //Make Buttons for each Method
+    JButton method1= new JButton("Single Robotic Arm");
+    JButton method2= new JButton("Electrodynamic Debris Eliminator");
+    JButton method3= new JButton("ELSA-d");
+    JButton method4= new JButton("Ion Beam Shepard");
+    JButton method5= new JButton("Electrodynamic Tether");
+    JButton method6= new JButton("Reusable Space Tug");
+    JButton method7= new JButton("Sticky Foam");
+    JButton method8= new JButton("STAR KILLER!");
+    JButton recPer= new JButton("Our Recommended Perecentages");
+    
+    
+    //Pretty Much just makes the GUI
+	private void prepareGUI()
+	{
+		//Make an array with all percent text boxes
+		AllPercents[0]=new JTextField();
+		AllPercents[1]=new JTextField();
+		AllPercents[2]=new JTextField();
+		AllPercents[3]=new JTextField();
+		AllPercents[4]=new JTextField();
+		AllPercents[5]=new JTextField();
+		AllPercents[6]=new JTextField();
+	
+	    method1.addActionListener(this);
+	    method2.addActionListener(this);
+	    method3.addActionListener(this);
+	    method4.addActionListener(this);
+	    method5.addActionListener(this);
+	    method6.addActionListener(this);
+	    method7.addActionListener(this);
+	    method8.addActionListener(this);
+	    recPer.addActionListener(this);
+		
+		for(int i=0;i<7;i++)
+		{
+			AllPercents[i].getDocument().addDocumentListener(this);
+		}
+		
+		//Get the height and width of the screen
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		final int width= (int)(screenSize.getWidth());
+		final int height=(int)screenSize.getHeight();
+		
+		//Create New Frame that takes up the whole screen
+		JFrame frame = new JFrame("Group 5: Super Awesome Calculator");
+		frame.setLayout(new FlowLayout());
+	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    frame.setSize(width,height);
+	    
+	    JPanel methodButtonPanel=new JPanel(new GridLayout(2,5));
+	    methodButtonPanel.setSize(new Dimension(width, 2*(height/11)));
+	    methodButtonPanel.add(method1);
+	    methodButtonPanel.add(method2);
+	    methodButtonPanel.add(method3);
+	    methodButtonPanel.add(method4);
+	    methodButtonPanel.add(recPer);
+	    methodButtonPanel.add(method5);
+	    methodButtonPanel.add(method6);
+	    methodButtonPanel.add(method7);
+	    methodButtonPanel.add(method8);
+	    frame.add(methodButtonPanel);
+	    
+	    //Create Panel with GridLayout()
+	    JPanel panel=new JPanel(new GridLayout(8,3));
+	    panel.setSize(new Dimension(width, 8*(height/11)));
+	    
+	    //Row One Headers
+	    panel.add(new JLabel("Factors"));
+	    JPanel percentPanel= new JPanel(new GridLayout(2,1));
+	    percentPanel.add(new JLabel("Enter in a number 0 to 100 for Each Factor. Numbers must sum to 100."));
+	    JPanel bottomPercentPanel=new JPanel(new FlowLayout());
+	    bottomPercentPanel.add(new JLabel("Total: "));
+	    total=new JTextField("0",3);
+	    bottomPercentPanel.add(total);
+	    bottomPercentPanel.add(new JLabel("%"));
+	    percentPanel.add(bottomPercentPanel);
+	    panel.add(percentPanel);
+	    panel.add(new JLabel("Input (Drag the Slider or Enter a Number)"));
+	    
+	    //Row 2 (Time to Remove)
+	    panel.add(new JLabel("Time to Remove"));
+	    panel.add(AllPercents[0]);
+	    //Make a slider with a hash table of labels
+	    row2slider=new JSlider(0,5,0);
+	    Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
+	    labelTable.put(0, new JLabel("1 week"));
+	    labelTable.put(1, new JLabel("1 month"));
+	    labelTable.put(2, new JLabel("3 months"));
+	    labelTable.put(3, new JLabel("6 months"));
+	    labelTable.put(4, new JLabel("1 year"));
+	    labelTable.put(5, new JLabel("5+ years"));
+	    row2slider.setLabelTable(labelTable);
+	    row2slider.setPaintLabels(true);
+	    row2slider.setSnapToTicks(true);
+	    panel.add(row2slider);
+	    
+	    //Row 3 Quantity
+	    panel.add(new JLabel("Quantity"));
+	    panel.add(AllPercents[1]);
+	    //Make a slider with a hash table of labels
+	    row3slider=new JSlider(0,5,0);
+	    Hashtable<Integer, JLabel> labelTable3 = new Hashtable<Integer, JLabel>();
+	    labelTable3.put(0, new JLabel("50 kg"));
+	    labelTable3.put(1, new JLabel("100 kg"));
+	    labelTable3.put(2, new JLabel("500 kg"));
+	    labelTable3.put(3, new JLabel("1 tonne"));
+	    labelTable3.put(4, new JLabel("5 tonnes"));
+	    labelTable3.put(5, new JLabel("10+ tonnes"));
+	    row3slider.setLabelTable(labelTable3);
+	    row3slider.setPaintLabels(true);
+	    row3slider.setSnapToTicks(true);
+	    panel.add(row3slider);
+	    
+	    //Row 4 Cost
+	    panel.add(new JLabel("Cost (USD)"));
+	    panel.add(AllPercents[2]);
+	    row4cost=new JTextField();
+	    panel.add(row4cost);
+	    
+	    //Row 5 Technological Readiness
+	    panel.add(new JLabel("Technological Readiness"));
+	    panel.add(AllPercents[3]);
+	    //Make a slider with a hash table of labels
+	    row5slider=new JSlider(0,4,0);
+	    Hashtable<Integer, JLabel> labelTable5 = new Hashtable<Integer, JLabel>();
+	    labelTable5.put(0, new JLabel("Built"));
+	    labelTable5.put(1, new JLabel("Prototype        "));
+	    labelTable5.put(2, new JLabel("Technology exists"));
+	    //labelTable5.put(3, new JLabel("Technology needs to be made"));
+	    labelTable5.put(3, new JLabel("     Researching"));
+	    labelTable5.put(4, new JLabel("Idea"));
+	    row5slider.setLabelTable(labelTable5);
+	    row5slider.setPaintLabels(true);
+	    row5slider.setSnapToTicks(true);
+	    panel.add(row5slider);
+	    
+	    //Row 6 Environmental Impact
+	    panel.add(new JLabel("Environmental Impact"));
+	    panel.add(AllPercents[4]);
+	    //Make a slider with a hash table of labels
+	    row6slider=new JSlider(0,4,0);
+	    Hashtable<Integer, JLabel> labelTable6 = new Hashtable<Integer, JLabel>();
+	    labelTable6.put(0, new JLabel("None"));
+	    labelTable6.put(1, new JLabel("Very Low"));
+	    labelTable6.put(2, new JLabel("Low"));
+	    labelTable6.put(3, new JLabel("High"));
+	    labelTable6.put(4, new JLabel("Very High"));
+	    row6slider.setLabelTable(labelTable6);
+	    row6slider.setPaintLabels(true);
+	    row6slider.setSnapToTicks(true);
+	    panel.add(row6slider);
+	    
+	    
+	    //Row 7 Scalability
+	    panel.add(new JLabel("Scalability"));
+	    panel.add(AllPercents[5]);
+	    //Make a slider with a hash table of labels
+	    row7slider=new JSlider(0,4,0);
+	    Hashtable<Integer, JLabel> labelTable7 = new Hashtable<Integer, JLabel>();
+	    labelTable7.put(0, new JLabel("None"));
+	    labelTable7.put(1, new JLabel("Very Low"));
+	    labelTable7.put(2, new JLabel("Low"));
+	    labelTable7.put(3, new JLabel("High"));
+	    labelTable7.put(4, new JLabel("Very High"));
+	    row7slider.setLabelTable(labelTable7);
+	    row7slider.setPaintLabels(true);
+	    row7slider.setSnapToTicks(true);
+	    panel.add(row7slider);
+	    
+	    //Row 8 Type of Objects it can remove
+	    panel.add(new JLabel("Type of Objects it can remove"));
+	    panel.add(AllPercents[6]);
+	    //Check Boxed with various categories of space debris
+	    JPanel row8container=new JPanel(new GridLayout(2,1));
+	    row8container.add(new JLabel("Select all the boxes that apply"));
+	    //Make check box panel
+	    JPanel row8bottom=new JPanel(new GridLayout(2,2));
+	    smallBox=new JCheckBox("Small < 1 meter");
+	    mediumBox=new JCheckBox("Medium 1 meter to 10 meters");
+	    largeBox=new JCheckBox("Large >10 meters");
+	    specialBox=new JCheckBox("Special Sattelites only");
+	    row8bottom.add(smallBox);
+	    row8bottom.add(mediumBox);
+	    row8bottom.add(largeBox);
+	    row8bottom.add(specialBox);
+	    row8container.add(row8bottom);
+	    panel.add(row8container);
+	    
+	    //Add panel to frame
+	    frame.add(panel);
+	    
+	    //Create Button "Submit"
+	    JButton button = new JButton("Submit");
+	    button.addActionListener(this);
+	    //button.setSize(new Dimension(width, height/11));
+	    frame.add(button); 
+	    
+	    frame.setVisible(true);
+	}
+	public ICons_Calulator()
+	{
+		prepareGUI();
+	}
+	public static void main(String[] args) 
+	{
+		ICons_Calulator bob=new ICons_Calulator();
+	}
+	public void insertUpdate(DocumentEvent e)
+	{
+		try {
+			int num=0;
+			for(JTextField a:AllPercents)
+			{
+				if(!(a.getText().equals("")))
+				{
+					num+=Integer.parseInt(a.getText().trim());
+				}
+			}
+			if(num>100)
+			{
+				JOptionPane.showMessageDialog(null,"The total percentage can't be higher than 100%","100% error",JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			total.setText(Integer.toString(num));
+		}
+		catch(NumberFormatException b)
+		{
+			JOptionPane.showMessageDialog(null,"Text boxes for percentage and cost must only contain numbers","You put letters in the number places!",JOptionPane.ERROR_MESSAGE);
+		}
+		catch(Exception b)
+		{
+			JOptionPane.showMessageDialog(null,"This is not good...","!",JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	public void changedUpdate(DocumentEvent e)
+	{
+		
+	}
+	public void removeUpdate(DocumentEvent e)
+	{
+		try {
+			int num=0;
+			for(JTextField a:AllPercents)
+			{
+				if(!(a.getText().equals("")))
+				{
+					num+=Integer.parseInt(a.getText().trim());
+				}
+			}
+			if(num>100)
+			{
+				JOptionPane.showMessageDialog(null,"The total percentage can't be higher than 100%","100% error",JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			total.setText(Integer.toString(num));
+		}
+		catch(NumberFormatException b)
+		{
+			JOptionPane.showMessageDialog(null,"Text boxes for percentage and cost must only contain numbers","You put letters in the number places!",JOptionPane.ERROR_MESSAGE);
+		}
+		catch(Exception b)
+		{
+			JOptionPane.showMessageDialog(null,"This is not good...","!",JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	public void actionPerformed(ActionEvent e)
+	{
+		//Method Buttons
+		JButton thing=(JButton)e.getSource();
+		if(thing.getText().equals("Submit"))
+		{
+			/*
+			 * This function is invoked when the Submit button is pressed
+			 * It should first test if all of the inputs are valid
+			 * ex all percentages are in between 0 and 100 and sum to 100
+			 * Then multiply the inputs by the weights and get the FINAL SCORE
+			 * MUST THROW EXCEPTION
+			 */
+			try
+			{
+				//Initializing some variables
+				Double finalScore=0.0;
+				int total=0;
+				double percents[]=new double[7];
+				int factors[]=new int[7];
+				
+				//Checks if the percentages are between 0 and 100 and makes the percents array
+				for(int i=0;i<7;i++)
+				{
+					if(Integer.parseInt(AllPercents[i].getText().trim())>=0&&Integer.parseInt(AllPercents[i].getText().trim())<=100)
+					{
+						total+=Integer.parseInt(AllPercents[i].getText());
+						percents[i]=(double)(Integer.parseInt(AllPercents[i].getText())/5.0);
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(null,"All percentages must be numbers in between 1 and 100","CRITICAL ERROR!!!!!!!!!",JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+				}
+				
+				//Checks to see if total is 100
+				if(total!=100)
+				{
+					JOptionPane.showMessageDialog(null,"Percentages must add to 100","CRITICAL ERROR!!!!!!!!!",JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				//Setting values of factors 0,1
+				factors[0]=(int)row2slider.getValue();//0-5
+				factors[1]=(int)row3slider.getValue();//0-5
+				
+				//Factor 2
+				int factor2=Integer.parseInt(row4cost.getText().trim());
+				if(factor2<1000000)
+					factors[2]=0;
+				else if(factor2<10000000)
+					factors[2]=1;
+				else if(factor2<50000000)
+					factors[2]=2;
+				else if(factor2<100000000)
+					factors[2]=3;
+				else if(factor2<200000000)
+					factors[2]=4;
+				else if(factor2<500000000)
+					factors[2]=5;
+				else
+					factors[2]=0;
+				
+				//Factor 3-5
+				factors[3]=(int)(1.25*(double)(row5slider.getValue()));
+				factors[4]=(int)(1.25*(double)(row6slider.getValue()));
+				factors[5]=(int)(1.25*(double)(row7slider.getValue()));
+				
+				//Factor 6 
+				int numFactors=0;
+				if(smallBox.isSelected()) 
+				{
+					numFactors++;
+				}
+				if(mediumBox.isSelected()) 
+				{
+					numFactors++;
+				}
+				if(largeBox.isSelected()) 
+				{
+					numFactors++;
+				}
+				if(specialBox.isSelected()) 
+				{ 
+					numFactors++;
+				}
+				double var=(1.25*(double)(numFactors));
+				factors[6]=(int)Math.abs(5-var);
+				
+				//This part is a little weird but I accidentally coded almost every variable
+				//backwards so i had to fix it with all of the Math.abs() stuff
+				for(int i=0;i<7;i++)
+				{
+					double finalFactors=(double)Math.abs(5-factors[i]);
+					finalScore+=percents[i]*finalFactors;
+				}
+				finalScore=Math.round(finalScore*100.)/100.;
+				JOptionPane.showMessageDialog(null,"Final Score is " + finalScore + " out of a possible 100 points","Final Score",JOptionPane.PLAIN_MESSAGE);
+				return;
+			}
+			//Catch statement for if they put non numbers where there is supposed to be numbers
+			catch(NumberFormatException b)
+			{
+				JOptionPane.showMessageDialog(null,"Text boxes for percentage and cost must only contain numbers","You put letters in the number places!",JOptionPane.ERROR_MESSAGE);
+			}
+			//Hopefully this doesn't happen
+			catch(Exception b)
+			{
+				JOptionPane.showMessageDialog(null,"This is not good...","!",JOptionPane.ERROR_MESSAGE);
+			}
+		}
+		else if(thing.getText().equals("Our Recommended Perecentages"))
+		{
+			for(int i=0; i<7; i++)
+			{
+				AllPercents[i].setText(Integer.toString(recommendations[i]));
+			}
+		}
+		else
+		{
+			try
+			{
+				spaceJunkMethod method=null;
+				if(thing.getText().equals("Single Robotic Arm"))
+				{
+					method=SingleRoboticArm;
+				}
+				else if(thing.getText().equals("Electrodynamic Debris Eliminator"))
+				{
+					method=EDDE;
+				}
+				else if(thing.getText().equals("ELSA-d"))
+				{
+					method=ELSAd;
+				}
+				else if(thing.getText().equals("Ion Beam Shepard"))
+				{
+					method=IBS;
+				}
+				else if(thing.getText().equals("Electrodynamic Tether"))
+				{
+					method=EDT;
+				}
+				else if(thing.getText().equals("Reusable Space Tug"))
+				{
+					method=SpaceTug;
+				}
+				else if(thing.getText().equals("Sticky Foam"))
+				{
+					method=StickyFoam;
+				}
+				else
+				{
+					method=StarKiller;
+				}
+				row2slider.setValue(method.time);
+				row3slider.setValue(method.quantity);
+				row4cost.setText(Integer.toString(method.cost));
+				row5slider.setValue(method.techReadiness);
+				row6slider.setValue(method.enviro);
+				row7slider.setValue(method.scalability);
+				smallBox.setSelected(method.small==1);
+				mediumBox.setSelected(method.medium==1);
+				largeBox.setSelected(method.large==1);
+				specialBox.setSelected(method.special==1);
+			}
+			catch(Exception b)
+			{
+				System.out.println("Shoot!");
+			}
+		}
+	}
+}
