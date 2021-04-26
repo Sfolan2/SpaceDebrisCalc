@@ -21,7 +21,7 @@ public class ICons_Calulator implements ActionListener, DocumentListener {
 	int recommendations[]= {25, 10, 10, 10, 10, 10, 25};
 	JTextField AllPercents[]=new JTextField[7];
 	JTextField total;
-	JComponent allInput[]=new JComponent[10];
+	//JComponent allInput[]=new JComponent[11];
 	JSlider row2slider;
 	JSlider row3slider;
 	JSlider row5slider;
@@ -32,16 +32,17 @@ public class ICons_Calulator implements ActionListener, DocumentListener {
     JCheckBox mediumBox;
     JCheckBox largeBox;
     JCheckBox specialBox;
+    JCheckBox UncatBox;
     
     //Declare methods
-    spaceJunkMethod SingleRoboticArm=new spaceJunkMethod(0, 1, 300, 2, 3, 4, 1, 0, 0, 1);
+    spaceJunkMethod SingleRoboticArm=new spaceJunkMethod(0, 1, 300, 2, 3, 4, 1, 0, 0, 1,1);
     spaceJunkMethod EDDE=new spaceJunkMethod();
     spaceJunkMethod ELSAd=new spaceJunkMethod();
     spaceJunkMethod IBS=new spaceJunkMethod();
     spaceJunkMethod EDT=new spaceJunkMethod();
     spaceJunkMethod SpaceTug=new spaceJunkMethod();
     spaceJunkMethod StickyFoam=new spaceJunkMethod();
-    spaceJunkMethod StarKiller=new spaceJunkMethod();
+    spaceJunkMethod StarKiller=new spaceJunkMethod(0, 5, 2000000000, 5, 0, 4, 1, 1, 1, 1, 1);
     
     //Make Buttons for each Method
     JButton method1= new JButton("Single Robotic Arm");
@@ -76,7 +77,19 @@ public class ICons_Calulator implements ActionListener, DocumentListener {
 	    method7.addActionListener(this);
 	    method8.addActionListener(this);
 	    recPer.addActionListener(this);
-		
+	    
+	    //factor text boxes
+	    JLabel AllColumn1[]=new JLabel[8];
+	    AllColumn1[0]= new JLabel("Factors");
+	    AllColumn1[1]= new JLabel("Time to Remove");
+	    AllColumn1[2]= new JLabel("Quantity");
+	    AllColumn1[3]= new JLabel("Cost (USD)");
+	    AllColumn1[4]= new JLabel("Technological Readiness");
+	    AllColumn1[5]= new JLabel("Environmental Impact");
+	    AllColumn1[6]= new JLabel("Scalability");
+	    AllColumn1[7]= new JLabel("Type of Objects it can remove");
+	    
+	    
 		for(int i=0;i<7;i++)
 		{
 			AllPercents[i].getDocument().addDocumentListener(this);
@@ -87,6 +100,16 @@ public class ICons_Calulator implements ActionListener, DocumentListener {
 		final int width= (int)(screenSize.getWidth());
 		final int height=(int)screenSize.getHeight();
 		
+		for(JLabel e: AllColumn1)
+	    {
+			e.setMinimumSize(new Dimension(width/4,height/11));
+			e.setMaximumSize(new Dimension(width/4,height/11));
+	    }
+		for(JTextField e: AllPercents)
+		{
+			e.setMinimumSize(new Dimension(width/4,height/11));
+			e.setMaximumSize(new Dimension(width/4,height/11));
+		}
 		//Create New Frame that takes up the whole screen
 		JFrame frame = new JFrame("Group 5: Super Awesome Calculator");
 		frame.setLayout(new FlowLayout());
@@ -106,12 +129,25 @@ public class ICons_Calulator implements ActionListener, DocumentListener {
 	    methodButtonPanel.add(method8);
 	    frame.add(methodButtonPanel);
 	    
-	    //Create Panel with GridLayout()
-	    JPanel panel=new JPanel(new GridLayout(8,3));
-	    panel.setSize(new Dimension(width, 8*(height/11)));
+	    //Create panel with FlowLayout()
+	    JPanel panel=new JPanel(new FlowLayout());
+	    
+	    //Left Panel
+	    JPanel panel1=new JPanel(new GridLayout(8,1));
+	    panel1.setPreferredSize(new Dimension(width/4, 8*(height/11)));
+	    
+	    //Center panel
+	    JPanel panel2=new JPanel(new GridLayout(8,1));
+	    panel2.setPreferredSize(new Dimension(width/4, 8*(height/11)));
+	    
+	    //Right Panel
+	    JPanel panel3=new JPanel(new GridLayout(8,1));
+	    panel3.setPreferredSize(new Dimension((width/2)-50, 8*(height/11)));
+	    
+	    panel.setPreferredSize(new Dimension(width, 8*(height/11)));
 	    
 	    //Row One Headers
-	    panel.add(new JLabel("Factors"));
+	    panel1.add(AllColumn1[0]);
 	    JPanel percentPanel= new JPanel(new GridLayout(2,1));
 	    percentPanel.add(new JLabel("Enter in a number 0 to 100 for Each Factor. Numbers must sum to 100."));
 	    JPanel bottomPercentPanel=new JPanel(new FlowLayout());
@@ -120,14 +156,16 @@ public class ICons_Calulator implements ActionListener, DocumentListener {
 	    bottomPercentPanel.add(total);
 	    bottomPercentPanel.add(new JLabel("%"));
 	    percentPanel.add(bottomPercentPanel);
-	    panel.add(percentPanel);
-	    panel.add(new JLabel("Input (Drag the Slider or Enter a Number)"));
+	    panel2.add(percentPanel);
+	    panel3.add(new JLabel("Input (Drag the Slider or Enter a Number)"));
 	    
 	    //Row 2 (Time to Remove)
-	    panel.add(new JLabel("Time to Remove"));
-	    panel.add(AllPercents[0]);
+	    panel1.add(AllColumn1[1]);
+	    panel2.add(AllPercents[0]);
 	    //Make a slider with a hash table of labels
 	    row2slider=new JSlider(0,5,0);
+	    //row2slider.setMinimumSize(new Dimension(width/3,height/11));
+	    //row2slider.setMaximumSize(new Dimension(width/3,height/11));
 	    Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
 	    labelTable.put(0, new JLabel("1 week"));
 	    labelTable.put(1, new JLabel("1 month"));
@@ -138,36 +176,42 @@ public class ICons_Calulator implements ActionListener, DocumentListener {
 	    row2slider.setLabelTable(labelTable);
 	    row2slider.setPaintLabels(true);
 	    row2slider.setSnapToTicks(true);
-	    panel.add(row2slider);
+	    panel3.add(row2slider);
 	    
 	    //Row 3 Quantity
-	    panel.add(new JLabel("Quantity"));
-	    panel.add(AllPercents[1]);
+	    panel1.add(AllColumn1[2]);
+	    panel2.add(AllPercents[1]);
 	    //Make a slider with a hash table of labels
 	    row3slider=new JSlider(0,5,0);
+	    row3slider.setMinimumSize(new Dimension(width/3,height/11));
+	    row3slider.setMaximumSize(new Dimension(width/3,height/11));
 	    Hashtable<Integer, JLabel> labelTable3 = new Hashtable<Integer, JLabel>();
-	    labelTable3.put(0, new JLabel("50 kg"));
-	    labelTable3.put(1, new JLabel("100 kg"));
-	    labelTable3.put(2, new JLabel("500 kg"));
-	    labelTable3.put(3, new JLabel("1 tonne"));
-	    labelTable3.put(4, new JLabel("5 tonnes"));
-	    labelTable3.put(5, new JLabel("10+ tonnes"));
+	    labelTable3.put(0, new JLabel("1:1"));
+	    labelTable3.put(1, new JLabel("1:2"));
+	    labelTable3.put(2, new JLabel("1:5"));
+	    labelTable3.put(3, new JLabel("1:10"));
+	    labelTable3.put(4, new JLabel("1:100"));
+	    labelTable3.put(5, new JLabel(">1:100"));
 	    row3slider.setLabelTable(labelTable3);
 	    row3slider.setPaintLabels(true);
 	    row3slider.setSnapToTicks(true);
-	    panel.add(row3slider);
+	    panel3.add(row3slider);
 	    
 	    //Row 4 Cost
-	    panel.add(new JLabel("Cost (USD)"));
-	    panel.add(AllPercents[2]);
+	    panel1.add(AllColumn1[3]);
+	    panel2.add(AllPercents[2]);
 	    row4cost=new JTextField();
-	    panel.add(row4cost);
+	    row4cost.setMinimumSize(new Dimension(width/3,height/11));
+		row4cost.setMaximumSize(new Dimension(width/3,height/11));
+	    panel3.add(row4cost);
 	    
 	    //Row 5 Technological Readiness
-	    panel.add(new JLabel("Technological Readiness"));
-	    panel.add(AllPercents[3]);
+	    panel1.add(AllColumn1[4]);
+	    panel2.add(AllPercents[3]);
 	    //Make a slider with a hash table of labels
 	    row5slider=new JSlider(0,4,0);
+	    row5slider.setMinimumSize(new Dimension(width/3,height/11));
+		row5slider.setMaximumSize(new Dimension(width/3,height/11));
 	    Hashtable<Integer, JLabel> labelTable5 = new Hashtable<Integer, JLabel>();
 	    labelTable5.put(0, new JLabel("Built"));
 	    labelTable5.put(1, new JLabel("Prototype        "));
@@ -178,69 +222,84 @@ public class ICons_Calulator implements ActionListener, DocumentListener {
 	    row5slider.setLabelTable(labelTable5);
 	    row5slider.setPaintLabels(true);
 	    row5slider.setSnapToTicks(true);
-	    panel.add(row5slider);
+	    panel3.add(row5slider);
 	    
 	    //Row 6 Environmental Impact
-	    panel.add(new JLabel("Environmental Impact"));
-	    panel.add(AllPercents[4]);
+	    panel1.add(AllColumn1[5]);
+	    panel2.add(AllPercents[4]);
 	    //Make a slider with a hash table of labels
 	    row6slider=new JSlider(0,4,0);
+	    row6slider.setMinimumSize(new Dimension(width/3,height/11));
+		row6slider.setMaximumSize(new Dimension(width/3,height/11));
 	    Hashtable<Integer, JLabel> labelTable6 = new Hashtable<Integer, JLabel>();
-	    labelTable6.put(0, new JLabel("None"));
-	    labelTable6.put(1, new JLabel("Very Low"));
-	    labelTable6.put(2, new JLabel("Low"));
+	    labelTable6.put(0, new JLabel("Very Low"));
+	    labelTable6.put(1, new JLabel("Low"));
+	    labelTable6.put(2, new JLabel("Medium"));
 	    labelTable6.put(3, new JLabel("High"));
 	    labelTable6.put(4, new JLabel("Very High"));
 	    row6slider.setLabelTable(labelTable6);
 	    row6slider.setPaintLabels(true);
 	    row6slider.setSnapToTicks(true);
-	    panel.add(row6slider);
+	    panel3.add(row6slider);
 	    
 	    
 	    //Row 7 Scalability
-	    panel.add(new JLabel("Scalability"));
-	    panel.add(AllPercents[5]);
+	    panel1.add(AllColumn1[6]);
+	    panel2.add(AllPercents[5]);
 	    //Make a slider with a hash table of labels
 	    row7slider=new JSlider(0,4,0);
+	    row7slider.setMinimumSize(new Dimension(width/3,height/11));
+		row7slider.setMaximumSize(new Dimension(width/3,height/11));
 	    Hashtable<Integer, JLabel> labelTable7 = new Hashtable<Integer, JLabel>();
-	    labelTable7.put(0, new JLabel("None"));
-	    labelTable7.put(1, new JLabel("Very Low"));
-	    labelTable7.put(2, new JLabel("Low"));
+	    labelTable7.put(0, new JLabel("Very Low"));
+	    labelTable7.put(1, new JLabel("Low"));
+	    labelTable7.put(2, new JLabel("Medium"));
 	    labelTable7.put(3, new JLabel("High"));
 	    labelTable7.put(4, new JLabel("Very High"));
 	    row7slider.setLabelTable(labelTable7);
 	    row7slider.setPaintLabels(true);
 	    row7slider.setSnapToTicks(true);
-	    panel.add(row7slider);
+	    panel3.add(row7slider);
 	    
 	    //Row 8 Type of Objects it can remove
-	    panel.add(new JLabel("Type of Objects it can remove"));
-	    panel.add(AllPercents[6]);
+	    panel1.add(AllColumn1[7]);
+	    panel2.add(AllPercents[6]);
 	    //Check Boxed with various categories of space debris
 	    JPanel row8container=new JPanel(new GridLayout(2,1));
 	    row8container.add(new JLabel("Select all the boxes that apply"));
 	    //Make check box panel
-	    JPanel row8bottom=new JPanel(new GridLayout(2,2));
-	    smallBox=new JCheckBox("Small < 1 meter");
-	    mediumBox=new JCheckBox("Medium 1 meter to 10 meters");
-	    largeBox=new JCheckBox("Large >10 meters");
+	    JPanel row8bottom=new JPanel(new GridLayout(2,3));
+	    smallBox=new JCheckBox("Small < 50 kg");
+	    mediumBox=new JCheckBox("Medium 50 kg to 500 kg");
+	    largeBox=new JCheckBox("Large > 500 kg");
 	    specialBox=new JCheckBox("Special Sattelites only");
+	    UncatBox= new JCheckBox("Uncategorized Debris");
+	    
 	    row8bottom.add(smallBox);
 	    row8bottom.add(mediumBox);
 	    row8bottom.add(largeBox);
 	    row8bottom.add(specialBox);
+	    row8bottom.add(UncatBox);
 	    row8container.add(row8bottom);
-	    panel.add(row8container);
+	    //row8container.setMinimumSize(new Dimension(width/3, height/11));
+	    row8container.setMaximumSize(new Dimension(width/2, height/11));
+	    panel3.add(row8container);
 	    
 	    //Add panel to frame
+	    panel.add(panel1);
+	    panel.add(panel2);
+	    panel.add(panel3);
+	    
 	    frame.add(panel);
 	    
 	    //Create Button "Submit"
 	    JButton button = new JButton("Submit");
 	    button.addActionListener(this);
-	    //button.setSize(new Dimension(width, height/11));
+	    button.setPreferredSize(new Dimension(width/4, height/20));
 	    frame.add(button); 
 	    
+	    
+	    //frame.pack();
 	    frame.setVisible(true);
 	}
 	public ICons_Calulator()
@@ -354,7 +413,7 @@ public class ICons_Calulator implements ActionListener, DocumentListener {
 				
 				//Setting values of factors 0,1
 				factors[0]=(int)row2slider.getValue();//0-5
-				factors[1]=(int)row3slider.getValue();//0-5
+				factors[1]=(int)Math.abs(5-row3slider.getValue());//0-5
 				
 				//Factor 2
 				int factor2=Integer.parseInt(row4cost.getText().trim());
@@ -377,6 +436,7 @@ public class ICons_Calulator implements ActionListener, DocumentListener {
 				factors[3]=(int)(1.25*(double)(row5slider.getValue()));
 				factors[4]=(int)(1.25*(double)(row6slider.getValue()));
 				factors[5]=(int)(1.25*(double)(row7slider.getValue()));
+				factors[5]=Math.abs(5-factors[5]);
 				
 				//Factor 6 
 				int numFactors=0;
@@ -475,6 +535,7 @@ public class ICons_Calulator implements ActionListener, DocumentListener {
 				mediumBox.setSelected(method.medium==1);
 				largeBox.setSelected(method.large==1);
 				specialBox.setSelected(method.special==1);
+				UncatBox.setSelected(method.uncat==1);
 			}
 			catch(Exception b)
 			{
@@ -483,3 +544,4 @@ public class ICons_Calulator implements ActionListener, DocumentListener {
 		}
 	}
 }
+

@@ -9,6 +9,7 @@ public class spaceJunkMethod {
 	public int medium;
 	public int large;
 	public int special;
+	public int uncat;
 	public spaceJunkMethod()
 	{
 		time=0;
@@ -21,8 +22,9 @@ public class spaceJunkMethod {
 		medium=0;
 		large=0;
 		special=0;
+		uncat=0;
 	}
-	public spaceJunkMethod(int time_, int quantity_, int cost_, int techReadiness_, int enviro_,int scalability_, int small_, int medium_, int large_, int special_)
+	public spaceJunkMethod(int time_, int quantity_, int cost_, int techReadiness_, int enviro_,int scalability_, int small_, int medium_, int large_, int special_, int uncat_)
 	{
 		time=time_;
 		quantity=quantity_;
@@ -34,5 +36,6 @@ public class spaceJunkMethod {
 		medium=medium_;
 		large=large_;
 		special=special_;
+		uncat=uncat_;
 	}
 }
