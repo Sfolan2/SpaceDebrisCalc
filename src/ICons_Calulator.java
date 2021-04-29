@@ -18,7 +18,7 @@ public class ICons_Calulator implements ActionListener, DocumentListener {
 	 */
 	
 	//Initializing some variables up here so that I can use them later
-	int recommendations[]= {25, 10, 10, 10, 10, 10, 25};
+	int recommendations[]= {10, 15, 10, 10, 15, 20, 20};
 	JTextField AllPercents[]=new JTextField[7];
 	JTextField total;
 	//JComponent allInput[]=new JComponent[11];
