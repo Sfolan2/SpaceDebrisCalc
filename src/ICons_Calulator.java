@@ -35,13 +35,13 @@ public class ICons_Calulator implements ActionListener, DocumentListener {
     JCheckBox UncatBox;
     
     //Declare methods
-    spaceJunkMethod SingleRoboticArm=new spaceJunkMethod(0, 1, 300, 2, 3, 4, 1, 0, 0, 1,1);
-    spaceJunkMethod EDDE=new spaceJunkMethod();
-    spaceJunkMethod ELSAd=new spaceJunkMethod();
-    spaceJunkMethod IBS=new spaceJunkMethod();
-    spaceJunkMethod EDT=new spaceJunkMethod();
-    spaceJunkMethod SpaceTug=new spaceJunkMethod();
-    spaceJunkMethod StickyFoam=new spaceJunkMethod();
+    spaceJunkMethod SingleRoboticArm=new spaceJunkMethod(3, 0, 117000000, 2, 0, 2, 0, 1, 1, 0, 0);
+    spaceJunkMethod EDDE=new spaceJunkMethod(5, 5, 1900000, 2, 0, 1, 1, 0, 0, 0, 1);
+    spaceJunkMethod ELSAd=new spaceJunkMethod(3, 0, 191000000, 1, 0, 2, 0, 0, 0, 1, 0);
+    spaceJunkMethod IBS=new spaceJunkMethod(3, 0, 50000000, 2, 0, 2, 0, 1, 1, 0, 0);
+    spaceJunkMethod EDT=new spaceJunkMethod(4, 0, 2000000, 1, 0, 2, 0, 1, 1, 0, 0);
+    spaceJunkMethod SpaceTug=new spaceJunkMethod(3, 4, 2000000, 2, 0, 2, 0, 1, 1, 0, 0);
+    spaceJunkMethod StickyFoam=new spaceJunkMethod(3, 3, 4000000, 1, 0, 2, 0, 1, 1, 0, 1);
     spaceJunkMethod StarKiller=new spaceJunkMethod(0, 5, 2000000000, 5, 0, 4, 1, 1, 1, 1, 1);
     
     //Make Buttons for each Method
@@ -419,18 +419,16 @@ public class ICons_Calulator implements ActionListener, DocumentListener {
 				int factor2=Integer.parseInt(row4cost.getText().trim());
 				if(factor2<1000000)
 					factors[2]=0;
-				else if(factor2<10000000)
+				else if(factor2<2000000)
 					factors[2]=1;
-				else if(factor2<50000000)
+				else if(factor2<10000000)
 					factors[2]=2;
-				else if(factor2<100000000)
+				else if(factor2<50000000)
 					factors[2]=3;
-				else if(factor2<200000000)
+				else if(factor2<100000000)
 					factors[2]=4;
-				else if(factor2<500000000)
-					factors[2]=5;
 				else
-					factors[2]=0;
+					factors[2]=5;
 				
 				//Factor 3-5
 				factors[3]=(int)(1.25*(double)(row5slider.getValue()));
@@ -456,7 +454,11 @@ public class ICons_Calulator implements ActionListener, DocumentListener {
 				{ 
 					numFactors++;
 				}
-				double var=(1.25*(double)(numFactors));
+				if(UncatBox.isSelected())
+				{
+					numFactors++;
+				}
+				double var=(double)numFactors;
 				factors[6]=(int)Math.abs(5-var);
 				
 				//This part is a little weird but I accidentally coded almost every variable
