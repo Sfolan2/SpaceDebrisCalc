@@ -43,6 +43,7 @@ public class ICons_Calulator implements ActionListener, DocumentListener {
     spaceJunkMethod SpaceTug=new spaceJunkMethod(3, 4, 2000000, 2, 0, 2, 0, 1, 1, 0, 0);
     spaceJunkMethod StickyFoam=new spaceJunkMethod(3, 3, 4000000, 1, 0, 2, 0, 1, 1, 0, 1);
     spaceJunkMethod StarKiller=new spaceJunkMethod(0, 5, 2000000000, 5, 0, 4, 1, 1, 1, 1, 1);
+    spaceJunkMethod HydroWall=new spaceJunkMethod(4, 5, 1000000, 4, 2, 1, 1, 0, 0, 0, 0);
     
     //Make Buttons for each Method
     JButton method1= new JButton("Single Robotic Arm");
@@ -53,6 +54,7 @@ public class ICons_Calulator implements ActionListener, DocumentListener {
     JButton method6= new JButton("Reusable Space Tug");
     JButton method7= new JButton("Sticky Foam");
     JButton method8= new JButton("STAR KILLER!");
+    JButton method9= new JButton("Hydrogen Wall");
     JButton recPer= new JButton("Our Recommended Perecentages");
     
     
@@ -76,6 +78,7 @@ public class ICons_Calulator implements ActionListener, DocumentListener {
 	    method6.addActionListener(this);
 	    method7.addActionListener(this);
 	    method8.addActionListener(this);
+	    method9.addActionListener(this);
 	    recPer.addActionListener(this);
 	    
 	    //factor text boxes
@@ -127,6 +130,7 @@ public class ICons_Calulator implements ActionListener, DocumentListener {
 	    methodButtonPanel.add(method6);
 	    methodButtonPanel.add(method7);
 	    methodButtonPanel.add(method8);
+	    methodButtonPanel.add(method9);
 	    frame.add(methodButtonPanel);
 	    
 	    //Create panel with FlowLayout()
@@ -522,6 +526,10 @@ public class ICons_Calulator implements ActionListener, DocumentListener {
 				else if(thing.getText().equals("Sticky Foam"))
 				{
 					method=StickyFoam;
+				}
+				else if(thing.getText().equals("Hydrogen Wall"))
+				{
+					method=HydroWall;
 				}
 				else
 				{
