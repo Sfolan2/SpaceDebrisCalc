@@ -43,7 +43,7 @@ public class ICons_Calulator implements ActionListener, DocumentListener {
     spaceJunkMethod SpaceTug=new spaceJunkMethod(3, 4, 2000000, 2, 0, 2, 0, 1, 1, 0, 0);
     spaceJunkMethod StickyFoam=new spaceJunkMethod(3, 3, 4000000, 1, 0, 2, 0, 1, 1, 0, 1);
     spaceJunkMethod StarKiller=new spaceJunkMethod(0, 5, 2000000000, 5, 0, 4, 1, 1, 1, 1, 1);
-    spaceJunkMethod HydroWall=new spaceJunkMethod(4, 5, 1000000, 4, 2, 1, 1, 0, 0, 0, 0);
+    spaceJunkMethod HydroWall=new spaceJunkMethod(4, 5, 1000000, 4, 2, 1, 1, 0, 0, 0, 1);
     
     //Make Buttons for each Method
     JButton method1= new JButton("Single Robotic Arm");
